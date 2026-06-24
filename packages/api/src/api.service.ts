@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { MODULE_OPTIONS_TOKEN, ApiModuleOptions } from './api.module-definition';
 
 @Injectable()
-export class CompanyApiService {
+export class NestixApiService {
   constructor(
     @Inject(MODULE_OPTIONS_TOKEN) private options: ApiModuleOptions,
     private readonly httpService: HttpService

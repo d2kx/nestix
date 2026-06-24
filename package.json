@@ -1,5 +1,5 @@
 {
-  "name": "nestix-monorepo",
+  "name": "@flixcheck/nestix",
   "private": true,
   "workspaces": [
     "packages/*"

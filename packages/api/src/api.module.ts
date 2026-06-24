@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigurableModuleClass } from './api.module-definition';
-import { CompanyApiService } from './api.service';
+import { NestixApiService } from './api.service';
 
 @Module({
   imports: [HttpModule],
-  providers: [CompanyApiService],
-  exports: [CompanyApiService],
+  providers: [NestixApiService],
+  exports: [NestixApiService],
 })
-export class CompanyApiModule extends ConfigurableModuleClass {}
+export class NestixApiModule extends ConfigurableModuleClass {}

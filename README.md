@@ -1,4 +1,4 @@
-# Nestix Monorepo
+# @flixcheck/nestix
 
 `nestix` is a multi-package monorepo designed to host internal, installable NestJS libraries published under the `@flixcheck` NPM scope. By leveraging NPM workspaces, it manages development, dependency resolution, and build processes across multiple modular libraries from a single, unified codebase.
 
@@ -28,17 +28,21 @@ npm run build
 ## 📦 Available Packages
 
 ### 1. `@flixcheck/nestix-logger`
-A `@Global()` NestJS module that provides `CompanyLoggerService` to the entire application. It is dynamically configured via the custom method keys `forRoot` or `forRootAsync`.
+A `@Global()` NestJS module that provides `NestixLoggerService` to the entire application. It is dynamically configured via the custom method keys `forRoot` or `forRootAsync`.
+
+#### Peer Dependencies
+- `@nestjs/common`: `^11.0.0`
+- `@nestjs/core`: `^11.0.0`
 
 #### Importing & Configuration
 
 ```typescript
 import { Module } from '@nestjs/common';
-import { CompanyLoggerModule } from '@flixcheck/nestix-logger';
+import { NestixLoggerModule } from '@flixcheck/nestix-logger';
 
 @Module({
   imports: [
-    CompanyLoggerModule.forRoot({
+    NestixLoggerModule.forRoot({
       prefix: 'APP',
     }),
   ],
@@ -50,11 +54,11 @@ export class AppModule {}
 
 ```typescript
 import { Injectable, OnInit } from '@nestjs/common';
-import { CompanyLoggerService } from '@flixcheck/nestix-logger';
+import { NestixLoggerService } from '@flixcheck/nestix-logger';
 
 @Injectable()
 export class AppService implements OnInit {
-  constructor(private readonly logger: CompanyLoggerService) {}
+  constructor(private readonly logger: NestixLoggerService) {}
 
   onInit() {
     this.logger.log('Application initialized successfully.');
@@ -68,15 +72,21 @@ export class AppService implements OnInit {
 ### 2. `@flixcheck/nestix-api`
 A local (non-global) NestJS module that encapsulates HTTP operations using NestJS's `@nestjs/axios` library. It is configured using the standard module method keys `register` or `registerAsync`.
 
+#### Peer Dependencies
+- `@nestjs/axios`: `^4.0.0`
+- `@nestjs/common`: `^11.0.0`
+- `@nestjs/core`: `^11.0.0`
+- `rxjs`: `^7.0.0`
+
 #### Importing & Configuration
 
 ```typescript
 import { Module } from '@nestjs/common';
-import { CompanyApiModule } from '@flixcheck/nestix-api';
+import { NestixApiModule } from '@flixcheck/nestix-api';
 
 @Module({
   imports: [
-    CompanyApiModule.register({
+    NestixApiModule.register({
       baseUrl: 'https://jsonplaceholder.typicode.com',
     }),
   ],
@@ -88,11 +98,11 @@ export class AppModule {}
 
 ```typescript
 import { Injectable } from '@nestjs/common';
-import { CompanyApiService } from '@flixcheck/nestix-api';
+import { NestixApiService } from '@flixcheck/nestix-api';
 
 @Injectable()
 export class TestService {
-  constructor(private readonly apiService: CompanyApiService) {}
+  constructor(private readonly apiService: NestixApiService) {}
 
   async fetchUsers() {
     const users = await this.apiService.getData('users');
@@ -100,6 +110,35 @@ export class TestService {
   }
 }
 ```
+
+---
+
+## 🔗 Local Development & Testing (`npm link`)
+
+To test these packages locally in a consuming NestJS application without publishing them to NPM:
+
+1.  **Build the packages** in this monorepo to ensure the `dist/` directories are up to date:
+    ```bash
+    npm run build
+    ```
+2.  **Register the packages locally** by running `npm link` inside the compiled distribution directories:
+    ```bash
+    # Link logger package
+    cd packages/logger/dist
+    npm link
+
+    # Link api package
+    cd ../../api/dist
+    npm link
+    ```
+    > [!NOTE]
+    > It is critical to run `npm link` from within each package's `dist/` directory rather than the package root, as `dist/` is the folder that contains the compiled output and the resolved `package.json` that consuming applications look for.
+
+3.  **Symlink the packages** in your target consuming NestJS application folder:
+    ```bash
+    cd /path/to/your/nestjs-app
+    npm link @flixcheck/nestix-logger @flixcheck/nestix-api
+    ```
 
 ---
 
