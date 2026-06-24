@@ -1,0 +1,19 @@
+{
+  "name": "nestix-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/core": "^10.0.0",
+    "@nestjs/axios": "^3.0.0",
+    "rxjs": "^7.8.0",
+    "axios": "^1.6.0"
+  }
+}
